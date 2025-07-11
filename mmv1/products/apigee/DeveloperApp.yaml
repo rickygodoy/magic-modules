@@ -29,7 +29,7 @@ import_format:
   - "{{org_id}}/{{developer_email}}/{{name}}"
 custom_code:
   custom_import: "templates/terraform/custom_import/apigee_developer_app.go.tmpl"
-  pre_update: "templates/terraform/pre_update/apigee_developerapp.go.tmpl"
+  pre_update: "templates/terraform/pre_update/apigee_developer_app.go.tmpl"
 examples:
   - name: "apigee_developer_app_basic"
     vars:
