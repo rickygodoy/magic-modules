@@ -1,0 +1,34 @@
+// Approves or Revokes the DeveloperApp
+if d.HasChange("status") {
+
+    action := map[string]string {
+      "approved": "approve",
+      "revoked": "revoke",
+    }
+
+	// Changing the status requires a separate call to "generateKeyPairOrUpdateDeveloperAppStatus"
+    updateStatusUrl, err := transport_tpg.AddQueryParams(url, map[string]string{"action": action[d.Get("status").(string)]})
+    if err != nil {
+        return err
+    }
+
+	customHeaders := make(http.Header)
+    customHeaders["Content-Type"] = []string{"application/octet-stream"}
+
+    if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+        billingProject = bp
+    }
+
+    _, err = transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
+        Config:    config,
+        Method:    "POST",
+        Project:   billingProject,
+        RawURL:    updateStatusUrl,
+        UserAgent: userAgent,
+        Timeout:   d.Timeout(schema.TimeoutUpdate),
+        Headers:   customHeaders,
+    })
+    if err != nil {
+        return fmt.Errorf("Error updating DeveloperApp status: %s, %v", d.Id(), err)
+    }
+}
